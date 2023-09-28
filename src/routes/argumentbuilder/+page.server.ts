@@ -5,7 +5,7 @@ import { fail, redirect, error } from "@sveltejs/kit"
 
 
 export const actions = {
-  ajouterArgument: async ({ request, locals }) => {
+  ajouterProposition: async ({ request, locals }) => {
 
     if (!locals.pb.authStore.isValid) {
       throw redirect(303, '/login')
@@ -30,16 +30,12 @@ export const actions = {
 } satisfies Actions;
 
 export const load = (async () => {
-  const propositionslist = await pb.collection('propositions').getFullList({
+  const records = await pb.collection('propositions').getFullList({
     sort: '-created',
   });
-  const inferencetypeslist = await pb.collection('types_inferences').getFullList({
-    sort: 'ordre',
-});
 
   return {
-    recordsobj: JSON.parse(JSON.stringify(propositionslist)),
-    inferencetypeslistobj: JSON.parse(JSON.stringify(inferencetypeslist)),
+    recordsobj: JSON.parse(JSON.stringify(records)),
   };
 }) satisfies PageServerLoad;
 

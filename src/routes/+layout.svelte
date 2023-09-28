@@ -31,17 +31,14 @@
 					<a
 						class="nav-link"
 						class:active={$page.url.pathname === '/propositions'}
-						href="/propositions">Propositions</a
+						href="/propositions">Explorer propositions</a
 					>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" class:active={$page.url.pathname === '/arguments'} href="/arguments"
-						>Arguments</a
-					>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" class:active={$page.url.pathname === '/apprendre'} href="/apprendre"
-						>Apprendre</a
+					<a
+						class="nav-link"
+						class:active={$page.url.pathname === '/argumentbuilder'}
+						href="/argumentbuilder">argumentbuilder</a
 					>
 				</li>
 			</ul>
