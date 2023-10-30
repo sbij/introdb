@@ -6,70 +6,30 @@
 	//import "../../node_modules/bootstrap/dist/js/bootstrap.min.js";
 </script>
 
-<nav class="navbar navbar-expand-lg bg-body-tertiary mb-3">
-	<div class="container-fluid">
-		<a class="navbar-brand" href="/">Agrume</a>
-		<button
-			class="navbar-toggler"
-			type="button"
-			data-bs-toggle="collapse"
-			data-bs-target="#navbarSupportedContent"
-			aria-controls="navbarSupportedContent"
-			aria-expanded="false"
-			aria-label="Toggle navigation"
-		>
-			<span class="navbar-toggler-icon" />
-		</button>
-		<div class="collapse navbar-collapse" id="navbarSupportedContent">
-			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-				<li class="nav-item">
-					<a class="nav-link" class:active={$page.url.pathname === '/'} aria-current="page" href="/"
-						>Accueil</a
-					>
-				</li>
-				<li class="nav-item">
-					<a
-						class="nav-link"
-						class:active={$page.url.pathname === '/propositions'}
-						href="/propositions">Explorer propositions</a
-					>
-				</li>
-				<li class="nav-item">
-					<a
-						class="nav-link"
-						class:active={$page.url.pathname === '/argumentbuilder'}
-						href="/argumentbuilder">argumentbuilder</a
-					>
-				</li>
-			</ul>
-			<ul class="navbar-nav mb-2 mb-lg-0">
-				{#if $currentUser}
-					<li class="nav-item"><a href="/">{$currentUser.email}</a></li>
-					<li class="nav-item">
-						<form
-							method="POST"
-							action="/logout"
-							use:enhance={() => {
-								return async ({ result }) => {
-									pb.authStore.clear();
-									await applyAction(result);
-								};
-							}}
-						>
-							<button class="btn btn-primary btn-sm ms-2">Log out</button>
-						</form>
-					</li>
-				{:else}
-					<li class="nav-item"><a class="nav-link" href="/login">Log in</a></li>
-					<li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
-				{/if}
-			</ul>
+<div id="fullpage">
+	<header class="bg-white border-bottom border-dark-subtle">
+		<div class="container maincontainer">
+			<a href="/" class="text-decoration-none link-dark"><h1>introdb<span class="text-secondary">.mocob.org</span></h1></a>
+		</div>
+	</header>
+	<div class="bg-lightgray">
+		<div class="container maincontainer">
+			<slot />
 		</div>
 	</div>
-</nav>
-
-<div class="container">
-	<slot />
 </div>
 
-<footer><br /><br /><br /><br /><br /><a href="/apropos">À propos</a></footer>
+<style>
+	header {
+		padding-top: 30px;
+		padding-bottom: 20px;
+		margin-bottom: 30px;
+	}
+	.maincontainer {
+		max-width: 720px;
+	}
+	#fullpage {
+		background-color: #efefef;
+		margin-bottom: 50px;
+	}
+</style>
