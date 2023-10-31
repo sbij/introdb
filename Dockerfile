@@ -1,20 +1,25 @@
-FROM node:16-alpine AS builder
-RUN mkdir -p /app
-WORKDIR /app
-COPY package*.json /app
-RUN npm ci
-COPY . .
+FROM node:19.7-alpine AS sk-build
+WORKDIR /usr/src/app
 
+ARG TZ=Europe/Stockholm
+
+COPY . /usr/src/app
+RUN apk --no-cache add curl tzdata
+RUN cp /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN npm install
 RUN npm run build
-RUN npm prune --production
 
-FROM node:16-alpine
+FROM node:19.7-alpine
+WORKDIR /usr/src/app
 
-RUN mkdir -p /app
-WORKDIR /app
-COPY --from=builder --chown=nodeuser:nodeuser /app/build build/
-COPY --from=builder --chown=nodeuser:nodeuser /app/node_modules node_modules/
-COPY package.json .
+ARG TZ=Europe/Stockholm
+RUN apk --no-cache add curl tzdata
+RUN cp /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+COPY --from=sk-build /usr/src/app/package.json /usr/src/app/package.json
+COPY --from=sk-build /usr/src/app/package-lock.json /usr/src/app/package-lock.json
+
+COPY --from=sk-build /usr/src/app/build /usr/src/app/build
 
 EXPOSE 3000
-CMD [ "node", "build" ]
+CMD ["node", "build/index.js"]
