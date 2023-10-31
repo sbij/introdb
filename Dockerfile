@@ -12,9 +12,10 @@ FROM node:16-alpine
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
-COPY --from=builder --chown=nodeuser:nodeuser /usr/src/app/build build/
-COPY --from=builder --chown=nodeuser:nodeuser /usr/src/app/node_modules node_modules/
-COPY package.json .
+COPY --from=sk-build /usr/src/app/package.json /usr/src/app/package.json
+COPY --from=sk-build /usr/src/app/package-lock.json /usr/src/app/package-lock.json
+
+COPY --from=sk-build /usr/src/app/build /usr/src/app/build
 
 EXPOSE 3000
 CMD [ "node", "build" ]
