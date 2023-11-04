@@ -5,69 +5,88 @@
 	export let data: PageData;
 	console.log(data);
 </script>
+
 <svelte:head>
-    <title>{data.indivrecordobj.name} | Introdb.mocob.org</title> 
+	<title>{data.indivrecordobj.name} | Introdb.mocob.org</title>
 </svelte:head>
 
-
-<h2 class="h3 mt-4 mb-4">{data.indivrecordobj.name}</h2>
+<h2>{data.indivrecordobj.name}</h2>
 <!-- <h3 class="h5 mt-4 mb-4">Liste des ressources</h3> -->
 
-<div class="mb-5">
-	{#each data.ressourceslist as ressource}
-		<div class="my-2 border border-dark-subtle bg-white px-3 py-3">
-			<div class="">
+<ul class="list-group mt-3 shadow-sm">
+	{#each data.ressourceslist as ressource, i}
+		<li class="list-group-item">
+			<div class="mt-1">
 				<div>
-					<div class="">{ressource.name}</div>
-					<div class="mt-1">
-						{#if ressource.tags != ''}
-							{#each ressource.tags.split(',') as tag}
-								<span class="badge text-bg-secondary me-1">{tag}</span>
-							{/each}
-						{:else}
-							<span class="badge text-bg-secondary">Pas de tag</span>
-						{/if}
+					<div class="">
+						<div>{ressource.name}
+						
+							{#if ressource.url != ''}
+							<a href="{ressource.url}">{ressource.url}</a>
+							{/if}
+						</div>
+						<div class="mt-1">
+							{#if ressource.tags != ''}
+								{#each ressource.tags.split(',') as tag}
+									<span class="badge text-bg-dark me-1">{tag}</span>
+								{/each}
+							{/if}
+						</div>
 					</div>
-					<!-- <div class="d-flex justify-content-end">/</div> -->
 				</div>
 				<!-- <div class="mt-2">votes</div> -->
-				<div class="bg-light mt-3 pt-1 border">
-					{#if ressource.expand['votes(ressource)'] !== undefined}
-						{#each ressource.expand['votes(ressource)'] as vote}
-							<div class="border-start border-dark-subtle small mt-1 mb-2 ps-2 ms-2">
-								{vote.expand.value.value} : {vote.comment}
+				<div class="border-start mt-3 ms-2">
+					<div class="">
+						<ul class="list-group list-group-flush p-0 m-0">
+							{#if ressource.expand['votes(ressource)'] !== undefined}
+								{#each ressource.expand['votes(ressource)'] as vote}
+									<li class="list-group-item px-2 py-1 m-0 list-group-item-light">
+										<span class="badge text-bg-secondary">{vote.expand.value.value}</span>
+										{vote.comment}
+									</li>
+								{/each}
+							{/if}
+							<li class="list-group-item px-2 py-1 m-0 list-group-item-light">
+								<button
+									class="btn btn-link btn-sm p-0 text-decoration-none"
+									type="button"
+									data-bs-toggle="collapse"
+									data-bs-target="#divcomment{i}"
+									aria-expanded="false"
+									aria-controls="divcomment{i}"
+								>
+									Commenter
+								</button>
+							</li>
+						</ul>
+						<div class="mt-1 ps-2">
+							<div class="collapse" id="divcomment{i}">
+								<form method="POST" action="?/addVote" use:enhance>
+									<label>
+										Voter :
+										<select name="value">
+											{#each data.vote_values as votevalue}
+												<option value={votevalue.id}>{votevalue.value}</option>
+											{/each}
+										</select>
+									</label><br />
+									<label>
+										Commentaire :
+										<input name="comment" type="text" />
+									</label><br />
+									<input name="ressource" type="hidden" value={ressource.id} />
+									<button>Ajouter</button>
+								</form>
 							</div>
-						{/each}
-					{:else}
-						<div class="border-start border-dark-subtle small mt-1 mb-2 ps-2 ms-2 text-muted">
-							<i>Pas encore de commentaire</i>
 						</div>
-					{/if}
-					<div class="small ms-2 mt-3">
-						<form method="POST" action="?/addVote" use:enhance>
-							<label class="mb-1">
-								Voter :
-								<select name="value">
-									{#each data.vote_values as votevalue}
-										<option value={votevalue.id}>{votevalue.value}</option>
-									{/each}
-								</select>
-							</label>
-							<label class="mb-1">
-								Commentaire :
-								<input name="comment" type="text" />
-							</label>
-							<input name="ressource" type="hidden" value="{ressource.id}" />
-							<button class="mb-1">Ajouter</button>
-						</form>
 					</div>
 				</div>
 			</div>
-		</div>
+		</li>
 	{:else}
 		Aucune ressource
 	{/each}
-</div>
+</ul>
 
 <hr />
 
@@ -83,12 +102,12 @@
 				</div>
 
 				<div class="mb-3">
-					<label for="name" class="form-label">Lien (facultatif, dans le cas d'un site)</label>
+					<label for="url" class="form-label">Lien (facultatif, dans le cas d'un site)</label>
 					<input type="text" class="form-control" id="url" name="url" />
 				</div>
 
 				<div class="mb-3">
-					<label for="name" class="form-label">Tags séparés par des virgules</label>
+					<label for="tags" class="form-label">Tags séparés par des virgules</label>
 					<input
 						type="text"
 						class="form-control"
@@ -111,8 +130,4 @@
 <hr />
 
 <style>
-	hr {
-		margin-top: 0.2rem;
-		margin-bottom: 0.2rem;
-	}
 </style>
