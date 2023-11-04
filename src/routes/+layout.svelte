@@ -3,7 +3,6 @@
 	import { currentUser, pb } from '$lib/pocketbase';
 	import '../app.scss';
 	import { page } from '$app/stores';
-	//import "../../node_modules/bootstrap/dist/js/bootstrap.min.js";
 </script>
 
 <div>
