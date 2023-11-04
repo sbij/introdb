@@ -26,8 +26,10 @@
 							{#if ressource.url != ''}
 								<a href={ressource.url}>{ressource.url}</a>
 							{/if}
+							{#if $currentUser}
 							{#if $currentUser.id == ressource.user}
 								Supprimer/modifier
+							{/if}
 							{/if}
 						</div>
 						<div>
@@ -52,8 +54,10 @@
 												<span>{vote.expand.value.value}</span> :
 												{vote.comment}
 
+												{#if $currentUser}
 												{#if $currentUser.id == vote.user}
 													Supprimer/modifier
+												{/if}
 												{/if}
 											</li>
 										{/each}

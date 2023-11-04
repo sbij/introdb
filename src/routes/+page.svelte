@@ -20,8 +20,10 @@
 		{#each data.recordsobj as subject}
 			<li>
 				<a href="subject/{subject.id}">{subject.name}</a>
-				{#if $currentUser.id == subject.user}
-					Supprimer/modifier
+				{#if $currentUser}
+					{#if $currentUser.id == subject.user}
+						Supprimer/modifier
+					{/if}
 				{/if}
 			</li>
 		{/each}
