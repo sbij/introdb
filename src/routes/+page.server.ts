@@ -8,16 +8,16 @@ import { fail, redirect, error } from "@sveltejs/kit"
 export const actions = {
   addSubject: async ({ request, locals, params }) => {
 
-      /* if (!locals.pb.authStore.isValid) {
+      if (!locals.pb.authStore.isValid) {
         throw redirect(303, '/login')
-      } */
+      }
 
       const formdata = await request.formData();
 
       const data = {
           "name": formdata.get('name'),
           "url": formdata.get('name'),
-          //"user": locals.user.id
+          "user": locals.user.id
       };
       console.log(data);
 

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import type { PageData, ActionData } from './$types';
+	import { currentUser, pb } from '$lib/pocketbase';
 
 	export let data: PageData;
 	console.log(data);
@@ -12,26 +13,30 @@
 
 <p>L'introdb contient des listes de ressources d'introduction à différents sujets.</p>
 
-<!-- <h2 class="h5 mt-4 mb-3">Liste des sujets</h2> -->
+<!-- <h2>Liste des sujets</h2> -->
 
 <section>
-	<div class="list-group shadow-sm">
+	<ul>
 		{#each data.recordsobj as subject}
-			<a href="subject/{subject.id}" class="list-group-item list-group-item-action">{subject.name}</a>
+			<li>
+				<a href="subject/{subject.id}">{subject.name}</a>
+				{#if $currentUser.id == subject.user}
+					Supprimer/modifier
+				{/if}
+			</li>
 		{/each}
-	</div>
+	</ul>
 
-
-	<div class=" mt-5">
+	<div>
 		Ajouter un sujet :
 
 		<form method="POST" action="?/addSubject" use:enhance>
-			<div class="mb-3">
-				<label for="name" class="form-label">Nom</label>
-				<input type="text" class="form-control" id="name" name="name" />
+			<div>
+				<label for="name">Nom</label>
+				<input type="text" id="name" name="name" disabled={!$currentUser} />
 			</div>
 
-			<button type="submit" class="btn btn-primary">Ajouter</button>
+			<button type="submit" disabled={!$currentUser}>Ajouter</button>
 		</form>
 	</div>
 </section>

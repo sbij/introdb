@@ -7,28 +7,60 @@
 </script>
 
 <div>
-	<div class="container fullpage">
-		<header class="mt-4 mb-4">
-			<a href="/" class="text-decoration-none"
-				><div class="d-flex align-items-center p-3 my-3 text-white bg-primary rounded shadow-sm">
-					<div class="lh-1">
-						<h1 class="h5 mb-0 text-white lh-1">
-							introdb<small class="text-light">.mocob.org</small>
+	<div class="fullpage">
+		<header>
+			<a href="/"
+				><div>
+					<div>
+						<h1>
+							introdb<small>.mocob.org</small>
 						</h1>
 						<!-- <small>Since 2011</small> -->
 					</div>
 				</div></a
 			>
 		</header>
+		<nav class="navbar">
+			<ul>
+				{#if $currentUser}
+					<li>{$currentUser.email}</li>
+					<li><form
+					method="POST"
+					action="/logout"
+					use:enhance={() => {
+						return async ({ result }) => {
+							pb.authStore.clear();
+							await applyAction(result);
+						};
+					}}
+				>
+					<button>Log out</button>
+				</form></li>
+				{:else}
+				<li><a href="/register">Register</a></li>
+				<li><a href="/login">Login</a></li>
+				{/if}
+			</ul>
+		</nav>
 		<div>
 			<slot />
 		</div>
-		<footer class="mt-5">Footer</footer>
+		<footer>Footer</footer>
 	</div>
 </div>
 
 <style>
 	.fullpage {
 		max-width: 720px;
+		margin:auto;
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+	.navbar {
+		margin-bottom: 50px;
+	}
+	footer {
+		margin-top: 50px;
+		margin-bottom: 50px;
 	}
 </style>

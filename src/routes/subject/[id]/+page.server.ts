@@ -8,9 +8,9 @@ import { fail, redirect, error } from "@sveltejs/kit"
 export const actions = {
     addRessource: async ({ request, locals, params }) => {
 
-        /* if (!locals.pb.authStore.isValid) {
+        if (!locals.pb.authStore.isValid) {
           throw redirect(303, '/login')
-        } */
+        }
 
         const formdata = await request.formData();
 
@@ -18,7 +18,7 @@ export const actions = {
             "name": formdata.get('name'),
             "url": formdata.get('url'),
             "subject": params.id,
-            //"user": locals.user.id
+            "user": locals.user.id
         };
         console.log(data);
 
@@ -33,9 +33,9 @@ export const actions = {
     },
     addVote: async ({ request, locals, params }) => {
 
-        /* if (!locals.pb.authStore.isValid) {
+        if (!locals.pb.authStore.isValid) {
           throw redirect(303, '/login')
-        } */
+        }
 
         const formdata = await request.formData();
 
@@ -43,7 +43,7 @@ export const actions = {
             "comment": formdata.get('comment'),
             "value": formdata.get('value'),
             "ressource": formdata.get('ressource'),
-            //"user": locals.user.id
+            "user": locals.user.id
         };
         console.log(data);
 
