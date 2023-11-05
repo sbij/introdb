@@ -64,10 +64,10 @@ export const load = (async ({ params }) => {
     });
     const ressources = await pb.collection('ressources').getFullList({
         filter: `subject = "${params.id}"`,
-        expand: 'votes(ressource).value'
+        expand: 'votes(ressource).value,votes(ressource).user'
     });
     const vote_values = await pb.collection('vote_values').getFullList({
-        sort: 'created',
+        sort: '-weight',
     });
     /* const sources = await pb.collection('source').getList(1, 50, {
         filter: `proposition = "${params.id}"`,

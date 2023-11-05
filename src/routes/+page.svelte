@@ -11,7 +11,7 @@
 	<title>Introdb.mocob.org</title>
 </svelte:head>
 
-<p>L'introdb contient des listes de ressources d'introduction à différents sujets.</p>
+<p>Listes collaboratives de ressources d'introduction à différents sujets.</p>
 
 <!-- <h2>Liste des sujets</h2> -->
 
@@ -22,7 +22,18 @@
 				<a href="subject/{subject.id}">{subject.name}</a>
 				{#if $currentUser}
 					{#if $currentUser.id == subject.user}
-						Supprimer/modifier
+					<form
+					method="POST"
+					action="/subject/{subject.id}/delete"
+					use:enhance={() => {
+						return async ({ result }) => {
+							pb.authStore.clear();
+							await applyAction(result);
+						};
+					}}
+				>
+					<button>Supprimer</button>
+				</form>
 					{/if}
 				{/if}
 			</li>

@@ -5,6 +5,7 @@
 
 	export let data: PageData;
 	console.log(data);
+
 </script>
 
 <svelte:head>
@@ -21,21 +22,21 @@
 				<div>
 					<div>
 						<div>
-							{ressource.name}
+							<b>{ressource.name}</b>
 
 							{#if ressource.url != ''}
 								<a href={ressource.url}>{ressource.url}</a>
 							{/if}
 							{#if $currentUser}
-							{#if $currentUser.id == ressource.user}
-								Supprimer/modifier
-							{/if}
+								{#if $currentUser.id == ressource.user}
+									Supprimer/modifier
+								{/if}
 							{/if}
 						</div>
 						<div>
 							{#if ressource.tags != ''}
 								{#each ressource.tags.split(',') as tag}
-									<span>[{tag}]</span>
+									<span>[{tag.trim()}] </span>
 								{/each}
 							{/if}
 						</div>
@@ -53,11 +54,14 @@
 											<li>
 												<span>{vote.expand.value.value}</span> :
 												{vote.comment}
+												{#if vote.expand.user !== undefined}
+													(<a href="/user/{vote.expand.user.id}">{vote.expand.user.username}</a>)
+												{/if}
 
 												{#if $currentUser}
-												{#if $currentUser.id == vote.user}
-													Supprimer/modifier
-												{/if}
+													{#if $currentUser.id == vote.user}
+														Supprimer/modifier
+													{/if}
 												{/if}
 											</li>
 										{/each}

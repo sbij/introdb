@@ -22,7 +22,7 @@
 		<nav class="navbar">
 			<ul>
 				{#if $currentUser}
-					<li>{$currentUser.email}</li>
+					<li><a href="/user/{$currentUser.id}">{$currentUser.username}</a> ({$currentUser.email})</li>
 					<li><form
 					method="POST"
 					action="/logout"
