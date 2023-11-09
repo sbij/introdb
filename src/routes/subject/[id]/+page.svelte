@@ -5,7 +5,6 @@
 
 	export let data: PageData;
 	console.log(data);
-
 </script>
 
 <svelte:head>
@@ -29,7 +28,9 @@
 							{/if}
 							{#if $currentUser}
 								{#if $currentUser.id == ressource.user}
-									Supprimer/modifier
+									<form method="POST" action="/ressource/{ressource.id}/delete" style="display:inline;">
+										<button>Supprimer</button>
+									</form>
 								{/if}
 							{/if}
 						</div>
@@ -60,7 +61,9 @@
 
 												{#if $currentUser}
 													{#if $currentUser.id == vote.user}
-														Supprimer/modifier
+													<form method="POST" action="/vote/{vote.id}/delete" style="display:inline;">
+														<button>Supprimer</button>
+													</form>
 													{/if}
 												{/if}
 											</li>

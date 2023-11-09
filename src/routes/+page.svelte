@@ -20,20 +20,24 @@
 		{#each data.recordsobj as subject}
 			<li>
 				<a href="subject/{subject.id}">{subject.name}</a>
+				{#if subject.expand['ressources(subject)']}
+					({subject.expand['ressources(subject)'].length} ressource{subject.expand[
+						'ressources(subject)'
+					].length == 1
+						? ''
+						: 's'})
+				{:else}
+					(0 ressources)
+				{/if}
 				{#if $currentUser}
 					{#if $currentUser.id == subject.user}
-					<form
-					method="POST"
-					action="/subject/{subject.id}/delete"
-					use:enhance={() => {
-						return async ({ result }) => {
-							pb.authStore.clear();
-							await applyAction(result);
-						};
-					}}
-				>
-					<button>Supprimer</button>
-				</form>
+						<form
+							method="POST"
+							action="/subject/{subject.id}/delete"
+							style="display:inline;"
+						>
+							<button>Supprimer</button>
+						</form>
 					{/if}
 				{/if}
 			</li>

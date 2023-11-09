@@ -35,6 +35,7 @@ export const actions = {
 export const load = (async () => {
   const records = await pb.collection('subjects').getFullList({
     sort: 'name',
+    expand: 'ressources(subject)'
   });
 
   return {

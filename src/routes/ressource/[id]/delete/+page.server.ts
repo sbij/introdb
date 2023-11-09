@@ -10,14 +10,14 @@ export const actions = {
     if (!locals.pb.authStore.isValid) {
       throw redirect(303, '/login')
     }
-    const subject = await pb.collection('subjects').getOne(params.id, {
+    const subject = await pb.collection('ressources').getOne(params.id, {
     });
     console.log(subject);
     console.log(subject.user);
       if (subject.user == locals.user.id) {
 
         try {
-          const record = await pb.collection('subjects').delete(params.id);
+          const record = await pb.collection('ressources').delete(params.id);
         } catch (err) {
           console.error(err)
           throw error(err.status, err.message)

@@ -22,36 +22,46 @@
 		<nav class="navbar">
 			<ul>
 				{#if $currentUser}
-					<li><a href="/user/{$currentUser.id}">{$currentUser.username}</a> ({$currentUser.email})</li>
-					<li><form
-					method="POST"
-					action="/logout"
-					use:enhance={() => {
-						return async ({ result }) => {
-							pb.authStore.clear();
-							await applyAction(result);
-						};
-					}}
-				>
-					<button>Log out</button>
-				</form></li>
+					<li>
+						<a href="/user/{$currentUser.id}">{$currentUser.username}</a> ({$currentUser.email})
+					</li>
+					<li>
+						<form
+							method="POST"
+							action="/logout"
+							use:enhance={() => {
+								return async ({ result }) => {
+									if (confirm('Voulez-vous vous déconnecter ?')) {
+										pb.authStore.clear();
+										await applyAction(result);
+									}
+								};
+							}}
+						>
+							<button>Log out</button>
+						</form>
+					</li>
 				{:else}
-				<li><a href="/register">Register</a></li>
-				<li><a href="/login">Login</a></li>
+					<li><a href="/register">Register</a></li>
+					<li><a href="/login">Login</a></li>
 				{/if}
 			</ul>
 		</nav>
 		<div>
 			<slot />
 		</div>
-		<footer>Footer</footer>
+		<footer>
+			<small
+				><i>Site développé au sein du projet <a href="https://mocob.org/">MoCOB.org</a></i></small
+			>
+		</footer>
 	</div>
 </div>
 
 <style>
 	.fullpage {
 		max-width: 720px;
-		margin:auto;
+		margin: auto;
 		padding-left: 10px;
 		padding-right: 10px;
 	}
