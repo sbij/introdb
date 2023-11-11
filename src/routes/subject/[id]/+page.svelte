@@ -16,7 +16,7 @@
 
 <ul>
 	{#each data.ressourceslist as ressource, i}
-		<li>
+		<li class="ressourceli">
 			<div>
 				<div>
 					<div>
@@ -196,5 +196,9 @@
   box-shadow: 3px 3px 4px black; */
 		color: #0059b8;
 		cursor: pointer;
+	}
+	.ressourceli {
+		margin-top: 15px;
+		margin-bottom: 25px;
 	}
 </style>
