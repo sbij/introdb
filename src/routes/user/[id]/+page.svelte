@@ -14,9 +14,16 @@
 <h2>{data.indivrecordobj.username}</h2>
 <!-- <h3>Liste des ressources</h3> -->
 
+{#if data.indivrecordobj.name != ""}
+username modifié: {data.indivrecordobj.name}
+{/if}
+
 {#if $currentUser}
 	{#if $currentUser.id == data.indivrecordobj.id}
-		if user, modif username
+		
+	field username (laisser vide pour username généré automatiquement),
+
+	field description/présentation rapide
 	{/if}
 {/if}
 

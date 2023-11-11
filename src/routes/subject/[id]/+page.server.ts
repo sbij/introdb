@@ -17,6 +17,7 @@ export const actions = {
         const data = {
             "name": formdata.get('name'),
             "url": formdata.get('url'),
+            "tags": formdata.get('tags'),
             "languages": formdata.get('languages'),
             "ressourcetype": formdata.get('ressource_type'),
             "subject": params.id,
