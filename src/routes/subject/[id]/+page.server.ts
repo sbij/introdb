@@ -17,6 +17,8 @@ export const actions = {
         const data = {
             "name": formdata.get('name'),
             "url": formdata.get('url'),
+            "languages": formdata.get('languages'),
+            "ressourcetype": formdata.get('ressource_type'),
             "subject": params.id,
             "user": locals.user.id
         };
@@ -64,10 +66,13 @@ export const load = (async ({ params }) => {
     });
     const ressources = await pb.collection('ressources').getFullList({
         filter: `subject = "${params.id}"`,
-        expand: 'votes(ressource).value,votes(ressource).user'
+        expand: 'votes(ressource).value,votes(ressource).user,ressourcetype,user'
     });
     const vote_values = await pb.collection('vote_values').getFullList({
         sort: '-weight',
+    });
+    const ressource_types = await pb.collection('ressource_types').getFullList({
+        sort: 'order',
     });
     /* const sources = await pb.collection('source').getList(1, 50, {
         filter: `proposition = "${params.id}"`,
@@ -78,6 +83,7 @@ export const load = (async ({ params }) => {
         indivrecordobj: JSON.parse(JSON.stringify(subject)),
         ressourceslist: JSON.parse(JSON.stringify(ressources)),
         vote_values: JSON.parse(JSON.stringify(vote_values)),
+        ressource_types: JSON.parse(JSON.stringify(ressource_types)),
     };
 }) satisfies PageServerLoad;
 

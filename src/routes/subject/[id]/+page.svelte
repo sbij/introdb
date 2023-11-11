@@ -21,6 +21,9 @@
 				<div>
 					<div>
 						<div>
+							{#if ressource.expand && ressource.expand.ressourcetype}
+								[{ressource.expand.ressourcetype.name}]
+							{/if}
 							<b>{ressource.name}</b>
 
 							{#if ressource.url != ''}
@@ -28,13 +31,26 @@
 							{/if}
 							{#if $currentUser}
 								{#if $currentUser.id == ressource.user}
-									<form method="POST" action="/ressource/{ressource.id}/delete" style="display:inline;">
+									<form
+										method="POST"
+										action="/ressource/{ressource.id}/delete"
+										style="display:inline;"
+									>
 										<button>Supprimer</button>
 									</form>
 								{/if}
 							{/if}
 						</div>
 						<div>
+							Langues :
+							{#if ressource.languages != ''}
+								{#each ressource.languages.split(',') as language}
+									<span>[{language.trim()}] </span>
+								{/each}
+							{/if}
+						</div>
+						<div>
+							Catégories :
 							{#if ressource.tags != ''}
 								{#each ressource.tags.split(',') as tag}
 									<span>[{tag.trim()}] </span>
@@ -61,9 +77,13 @@
 
 												{#if $currentUser}
 													{#if $currentUser.id == vote.user}
-													<form method="POST" action="/vote/{vote.id}/delete" style="display:inline;">
-														<button>Supprimer</button>
-													</form>
+														<form
+															method="POST"
+															action="/vote/{vote.id}/delete"
+															style="display:inline;"
+														>
+															<button>Supprimer</button>
+														</form>
 													{/if}
 												{/if}
 											</li>
@@ -113,6 +133,14 @@
 			Ajouter une ressource :
 
 			<form method="POST" action="?/addRessource" use:enhance>
+				<label>
+					Voter :
+					<select name="ressource_type" disabled={!$currentUser}>
+						{#each data.ressource_types as type}
+							<option value={type.id}>{type.name}</option>
+						{/each}
+					</select>
+				</label><br />
 				<div>
 					<label for="name">Nom</label>
 					<input name="name" type="text" disabled={!$currentUser} />
@@ -124,7 +152,7 @@
 				</div>
 
 				<div>
-					<label for="tags">Tags séparés par des virgules</label>
+					<label for="tags">Catégories séparés par des virgules</label>
 					<input
 						type="text"
 						class="form-control"
@@ -137,6 +165,18 @@
 						Par exemple : Géométrie, Accessible, Exercices. Pour préciser si c'est une ressource
 						générale ou plus précise.
 					</div>
+				</div>
+				<div>
+					<label for="languages">Langues séparés par des virgules</label>
+					<input
+						type="text"
+						class="form-control"
+						id="languages"
+						name="languages"
+						aria-describedby="languagesHelp"
+						disabled={!$currentUser}
+					/>
+					<div id="languagesHelp">Par exemple : Anglais, Français.</div>
 				</div>
 
 				<button type="submit" disabled={!$currentUser}>Ajouter</button>
