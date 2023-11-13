@@ -5,6 +5,11 @@
 
 	export let data: PageData;
 	console.log(data);
+
+
+	let sortedRessources = data.ressourceslist;
+	sortedRessources.sort((a, b) => (a.expand['value'].weight > b.expand['value'].weight ? -1 : 1));
+
 </script>
 
 <svelte:head>

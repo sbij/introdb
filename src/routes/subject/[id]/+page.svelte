@@ -5,6 +5,22 @@
 
 	export let data: PageData;
 	console.log(data);
+
+	let sortedRessources = data.ressourceslist;
+	sortedRessources.forEach((element) => {
+		element.ressourcevoteval = 0;
+		if (element.expand['votes(ressource)'] != undefined) {
+			element.expand['votes(ressource)'].forEach((subelement) => {
+				console.log(subelement.expand.value.weight);
+				element.ressourcevoteval = element.ressourcevoteval + subelement.expand.value.weight;
+			});
+		} else {
+			element.ressourcevoteval = -100;
+		}
+	});
+	sortedRessources.sort((a, b) => (a.ressourcevoteval > b.ressourcevoteval ? -1 : 1));
+
+	console.log(sortedRessources);
 </script>
 
 <svelte:head>
@@ -14,13 +30,14 @@
 <h2>{data.indivrecordobj.name}</h2>
 <!-- <h3>Liste des ressources</h3> -->
 
-<ul>
-	{#each data.ressourceslist as ressource, i}
+<ul class="ressourceul">
+	{#each sortedRessources as ressource, i}
 		<li class="ressourceli">
 			<div>
 				<div>
 					<div>
 						<div>
+							<!-- {ressource.ressourcevoteval} -->
 							{#if ressource.expand && ressource.expand.ressourcetype}
 								[{ressource.expand.ressourcetype.name}]
 							{/if}
@@ -61,7 +78,7 @@
 				</div>
 				<div>
 					<div>
-						<ul>
+						<ul class="commentsul">
 							<li>
 								Commentaires :
 
@@ -72,7 +89,11 @@
 												<span>{vote.expand.value.value}</span> :
 												{vote.comment}
 												{#if vote.expand.user !== undefined}
-													(<a href="/user/{vote.expand.user.id}">{vote.expand.user.name ? vote.expand.user.name : vote.expand.user.username}</a>)
+													(<a href="/user/{vote.expand.user.id}"
+														>{vote.expand.user.name
+															? vote.expand.user.name
+															: vote.expand.user.username}</a
+													>)
 												{/if}
 
 												{#if $currentUser}
@@ -93,29 +114,27 @@
 									{/if}
 								</ul>
 							</li>
-							<li>
-								<details>
-									<summary>Ajouter un commentaire</summary>
-
-									<form method="POST" action="?/addVote" use:enhance>
-										<label>
-											Voter :
-											<select name="value" disabled={!$currentUser}>
-												{#each data.vote_values as votevalue}
-													<option value={votevalue.id}>{votevalue.value}</option>
-												{/each}
-											</select>
-										</label><br />
-										<label>
-											Commentaire :
-											<input name="comment" type="text" disabled={!$currentUser} />
-										</label><br />
-										<input name="ressource" type="hidden" value={ressource.id} />
-										<button disabled={!$currentUser}>Ajouter</button>
-									</form>
-								</details>
-							</li>
 						</ul>
+						<details>
+								<summary>Ajouter un commentaire</summary>
+
+								<form method="POST" action="?/addVote" use:enhance>
+									<label>
+										Voter :
+										<select name="value" disabled={!$currentUser}>
+											{#each data.vote_values as votevalue}
+												<option value={votevalue.id}>{votevalue.value}</option>
+											{/each}
+										</select>
+									</label><br />
+									<label>
+										Commentaire :
+										<input name="comment" type="text" disabled={!$currentUser} />
+									</label><br />
+									<input name="ressource" type="hidden" value={ressource.id} />
+									<button disabled={!$currentUser}>Ajouter</button>
+								</form>
+							</details>
 					</div>
 				</div>
 			</div>
@@ -200,5 +219,16 @@
 	.ressourceli {
 		margin-top: 15px;
 		margin-bottom: 25px;
+	}
+	details {
+		margin-top: 5px;
+		margin-left: 25px;
+	}
+	.commentsul {
+		margin-top: 5px;
+	}
+	.ressourceul {
+		margin-left: 0;
+		padding-left: 25px;
 	}
 </style>
