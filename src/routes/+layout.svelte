@@ -23,7 +23,7 @@
 			<ul>
 				{#if $currentUser}
 					<li>
-						<a href="/user/{$currentUser.id}">{$currentUser.username}</a> ({$currentUser.email})
+						<a href="/user/{$currentUser.id}">{$currentUser.name ? $currentUser.name : $currentUser.username}</a> ({$currentUser.email})
 					</li>
 					<li>
 						<form

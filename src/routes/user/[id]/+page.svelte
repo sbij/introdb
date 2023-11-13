@@ -11,27 +11,43 @@
 	<title>{data.indivrecordobj.username} | Introdb.mocob.org</title>
 </svelte:head>
 
-<h2>{data.indivrecordobj.username}</h2>
+<h2>{data.indivrecordobj.name ? data.indivrecordobj.name : data.indivrecordobj.username}</h2>
+Description : {data.indivrecordobj.description}
 <!-- <h3>Liste des ressources</h3> -->
-
-{#if data.indivrecordobj.name != ""}
-username modifié: {data.indivrecordobj.name}
-{/if}
 
 {#if $currentUser}
 	{#if $currentUser.id == data.indivrecordobj.id}
-		
-	field username (laisser vide pour username généré automatiquement),
-
-	field description/présentation rapide
+		<form method="POST" action="?/updateUser" use:enhance>
+			<div>
+				<label for="name">Pseudo/nom (laisser vide pour username généré automatiquement : {data.indivrecordobj.username})</label>
+				<br />
+				<input name="name" type="text" value={data.indivrecordobj.name} disabled={!$currentUser} />
+			</div>
+			<div>
+				<label for="description">description/présentation rapide</label>
+				<br />
+				<input
+					name="description"
+					type="text"
+					value={data.indivrecordobj.description}
+					disabled={!$currentUser}
+				/>
+			</div>
+			<button type="submit" disabled={!$currentUser}>Modifier</button>
+		</form>
 	{/if}
 {/if}
 
 <h3>Recommandations de l'utilisateur :</h3>
 <ul>
 	{#each data.ressourceslist as vote, i}
-		<li><a href="/subject/{vote.expand.ressource.expand.subject.id}">{vote.expand.ressource.expand.subject.name}</a> : {vote.expand.ressource.name} 
-			<ul><li>{vote.expand.value.value} : {vote.comment}</li></ul></li>
+		<li>{vote.expand.value.value} 
+			<a href="/subject/{vote.expand.ressource.expand.subject.id}"
+				>[{vote.expand.ressource.expand.subject.name}]</a
+			>
+			: <b>{vote.expand.ressource.name}</b>
+			<ul><li>{vote.comment}</li></ul>
+		</li>
 	{:else}
 		Aucune ressource
 	{/each}

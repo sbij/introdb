@@ -16,34 +16,52 @@
 <!-- <h2>Liste des sujets</h2> -->
 
 <section>
+	<h2>Sujets :</h2>
 	<ul>
 		{#each data.recordsobj as subject}
-			<li>
-				<a href="subject/{subject.id}">{subject.name}</a>
-				{#if subject.expand['ressources(subject)']}
+			{#if subject.expand['ressources(subject)']}
+				<li>
+					<a href="subject/{subject.id}">{subject.name}</a>
 					({subject.expand['ressources(subject)'].length} ressource{subject.expand[
 						'ressources(subject)'
 					].length == 1
 						? ''
 						: 's'})
-				{:else}
-					(0 ressources)
-				{/if}
-				{#if $currentUser}
-					{#if $currentUser.id == subject.user}
-						<form
-							method="POST"
-							action="/subject/{subject.id}/delete"
-							style="display:inline;"
-						>
-							<button>Supprimer</button>
-						</form>
+					{#if $currentUser}
+						{#if $currentUser.id == subject.user}
+							<form method="POST" action="/subject/{subject.id}/delete" style="display:inline;">
+								<button>Supprimer</button>
+							</form>
+						{/if}
 					{/if}
-				{/if}
-			</li>
+				</li>
+			{/if}
 		{/each}
 	</ul>
+</section>
 
+<section>
+	<h2 class="mt">Sujets avec un besoin de contributions :</h2>
+
+	<ul>
+		{#each data.recordsobj as subject}
+			{#if !subject.expand['ressources(subject)']}
+				<li>
+					<a href="subject/{subject.id}">{subject.name}</a> (0 ressources)
+					{#if $currentUser}
+						{#if $currentUser.id == subject.user}
+							<form method="POST" action="/subject/{subject.id}/delete" style="display:inline;">
+								<button>Supprimer</button>
+							</form>
+						{/if}
+					{/if}
+				</li>
+			{/if}
+		{/each}
+	</ul>
+</section>
+
+<section>
 	<div>
 		Ajouter un sujet :
 
@@ -59,4 +77,11 @@
 </section>
 
 <style>
+	h2 {
+		font-size: 1.2em;
+		margin-top: 20px;
+	}
+	.mt {
+		margin-top: 30px;
+	}
 </style>

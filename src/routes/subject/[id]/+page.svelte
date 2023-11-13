@@ -72,7 +72,7 @@
 												<span>{vote.expand.value.value}</span> :
 												{vote.comment}
 												{#if vote.expand.user !== undefined}
-													(<a href="/user/{vote.expand.user.id}">{vote.expand.user.username}</a>)
+													(<a href="/user/{vote.expand.user.id}">{vote.expand.user.name ? vote.expand.user.name : vote.expand.user.username}</a>)
 												{/if}
 
 												{#if $currentUser}
