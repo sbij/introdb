@@ -6,7 +6,7 @@ import { fail, redirect, error } from "@sveltejs/kit"
 
 
 export const actions = {
-  addSubject: async ({ request, locals, params }) => {
+  addDiscipline: async ({ request, locals, params }) => {
 
       if (!locals.pb.authStore.isValid) {
         throw redirect(303, '/login')
@@ -22,7 +22,7 @@ export const actions = {
       console.log(data);
 
       try {
-          const record = await pb.collection('subjects').create(data);
+          const record = await pb.collection('disciplines').create(data);
       } catch (err) {
           console.error(err)
           throw error(err.status, err.message)
@@ -33,13 +33,28 @@ export const actions = {
 } satisfies Actions;
 
 export const load = (async () => {
-  const records = await pb.collection('subjects').getFullList({
+  const disciplines = await pb.collection('disciplines').getFullList({
+    sort: 'name'
+    //expand: 'ressources(disciplines)'
+  });
+  const themes = await pb.collection('themes').getFullList({
+    sort: 'name'
+    //expand: 'ressources(disciplines)'
+  });
+  const groups = await pb.collection('ressource_groups').getFullList({
+    sort: 'order'
+  });
+  const ressources = await pb.collection('ressources').getFullList({
     sort: 'name',
-    expand: 'ressources(subject)'
+    expand: 'disciplines, themes, ressourcegroup, ressourcetype'
+    //expand: 'ressources(disciplines)'
   });
 
   return {
-    recordsobj: JSON.parse(JSON.stringify(records)),
+    disciplinesobj: JSON.parse(JSON.stringify(disciplines)),
+    themesobj: JSON.parse(JSON.stringify(themes)),
+    groupsobj: JSON.parse(JSON.stringify(groups)),
+    ressourcesobj: JSON.parse(JSON.stringify(ressources)),
   };
 }) satisfies PageServerLoad;
 

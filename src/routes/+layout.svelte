@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { currentUser, pb } from '$lib/pocketbase';
-	import '../app.scss';
+	import '../app.css';
 	import { page } from '$app/stores';
 </script>
 
-<div>
-	<div class="fullpage">
+<div class="container mx-auto max-w-3xl px-3 py-4">
+	<div>
 		<header>
 			<a href="/"
 				><div>
@@ -19,11 +19,14 @@
 				</div></a
 			>
 		</header>
-		<nav class="navbar">
-			<ul>
+		<nav>
+			<ul class="list-disc list-inside">
 				{#if $currentUser}
 					<li>
-						<a href="/user/{$currentUser.id}">{$currentUser.name ? $currentUser.name : $currentUser.username}</a> ({$currentUser.email})
+						<a href="/user/{$currentUser.id}"
+							>{$currentUser.name ? $currentUser.name : $currentUser.username}</a
+						>
+						({$currentUser.email})
 					</li>
 					<li>
 						<form
@@ -57,19 +60,3 @@
 		</footer>
 	</div>
 </div>
-
-<style>
-	.fullpage {
-		max-width: 720px;
-		margin: auto;
-		padding-left: 10px;
-		padding-right: 10px;
-	}
-	.navbar {
-		margin-bottom: 50px;
-	}
-	footer {
-		margin-top: 50px;
-		margin-bottom: 50px;
-	}
-</style>

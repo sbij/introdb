@@ -20,7 +20,7 @@ export const actions = {
             "tags": formdata.get('tags'),
             "languages": formdata.get('languages'),
             "ressourcetype": formdata.get('ressource_type'),
-            "subject": params.id,
+            "discipline": params.id,
             "user": locals.user.id
         };
         console.log(data);
@@ -62,11 +62,11 @@ export const actions = {
 } satisfies Actions;
 
 export const load = (async ({ params }) => {
-    const subject = await pb.collection('subjects').getOne(params.id, {
+    const discipline = await pb.collection('disciplines').getOne(params.id, {
         expand: 'ressources,relField2.subRelField',
     });
     const ressources = await pb.collection('ressources').getFullList({
-        filter: `subject = "${params.id}"`,
+        filter: `disciplines ~ "${params.id}"`,
         expand: 'votes(ressource).value,votes(ressource).user,ressourcetype,user'
     });
     const vote_values = await pb.collection('vote_values').getFullList({
@@ -81,7 +81,7 @@ export const load = (async ({ params }) => {
     }); */
 
     return {
-        indivrecordobj: JSON.parse(JSON.stringify(subject)),
+        indivrecordobj: JSON.parse(JSON.stringify(discipline)),
         ressourceslist: JSON.parse(JSON.stringify(ressources)),
         vote_values: JSON.parse(JSON.stringify(vote_values)),
         ressource_types: JSON.parse(JSON.stringify(ressource_types)),

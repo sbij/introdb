@@ -34,7 +34,7 @@ export const load = (async ({ params }) => {
     const user = await pb.collection('users').getOne(params.id);
     const votes = await pb.collection('votes').getFullList({
         filter: `user = "${params.id}"`,
-        expand: 'ressource.subject,value'
+        expand: 'ressource.discipline,value'
     });
     /* const sources = await pb.collection('source').getList(1, 50, {
         filter: `proposition = "${params.id}"`,

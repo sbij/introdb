@@ -30,9 +30,9 @@
 <h2>{data.indivrecordobj.name}</h2>
 <!-- <h3>Liste des ressources</h3> -->
 
-<ul class="ressourceul">
+<ul>
 	{#each sortedRessources as ressource, i}
-		<li class="ressourceli">
+		<li>
 			<div>
 				<div>
 					<div>
@@ -51,7 +51,6 @@
 									<form
 										method="POST"
 										action="/ressource/{ressource.id}/delete"
-										style="display:inline;"
 									>
 										<button>Supprimer</button>
 									</form>
@@ -78,7 +77,7 @@
 				</div>
 				<div>
 					<div>
-						<ul class="commentsul">
+						<ul>
 							<li>
 								Commentaires :
 
@@ -101,7 +100,6 @@
 														<form
 															method="POST"
 															action="/vote/{vote.id}/delete"
-															style="display:inline;"
 														>
 															<button>Supprimer</button>
 														</form>
@@ -205,30 +203,3 @@
 </div>
 
 <hr />
-
-<style>
-	details > summary {
-		/* padding: 2px 6px;
-  width: 15em;
-  background-color: #ddd;
-  border: none;
-  box-shadow: 3px 3px 4px black; */
-		color: #0059b8;
-		cursor: pointer;
-	}
-	.ressourceli {
-		margin-top: 15px;
-		margin-bottom: 25px;
-	}
-	details {
-		margin-top: 5px;
-		margin-left: 25px;
-	}
-	.commentsul {
-		margin-top: 5px;
-	}
-	.ressourceul {
-		margin-left: 0;
-		padding-left: 25px;
-	}
-</style>

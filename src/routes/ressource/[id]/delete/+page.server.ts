@@ -10,11 +10,11 @@ export const actions = {
     if (!locals.pb.authStore.isValid) {
       throw redirect(303, '/login')
     }
-    const subject = await pb.collection('ressources').getOne(params.id, {
+    const discipline = await pb.collection('ressources').getOne(params.id, {
     });
-    console.log(subject);
-    console.log(subject.user);
-      if (subject.user == locals.user.id) {
+    console.log(discipline);
+    console.log(discipline.user);
+      if (discipline.user == locals.user.id) {
 
         try {
           const record = await pb.collection('ressources').delete(params.id);
