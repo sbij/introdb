@@ -8,10 +8,10 @@
 <div class="container mx-auto max-w-3xl px-3 py-4">
 	<div>
 		<header>
-			<a href="/"
+			<a href="/" class="no-underline text-black visited:text-black"
 				><div>
 					<div>
-						<h1>
+						<h1 class="text-2xl font-bold">
 							introdb<small>.mocob.org</small>
 						</h1>
 						<!-- <small>Since 2011</small> -->
@@ -20,7 +20,7 @@
 			>
 		</header>
 		<nav>
-			<ul class="list-disc list-inside">
+			<ul class="list-disc list-inside mb-5 mt-3">
 				{#if $currentUser}
 					<li>
 						<a href="/user/{$currentUser.id}"

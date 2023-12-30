@@ -190,14 +190,6 @@ Ajouter des filtres :
 						{/each}
 					{/if}
 
-					<br />
-
-					Mots-clefs : a suppr? et remplacé par themes et commentaires?
-					{#if ressource.tags != ''}
-						{#each ressource.tags.split(',') as tag}
-							<span>[{tag.trim()}] </span>
-						{/each}
-					{/if}
 				</div>
 			{/if}
 		{/if}

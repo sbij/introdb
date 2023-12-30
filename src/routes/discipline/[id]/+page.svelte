@@ -65,14 +65,6 @@
 								{/each}
 							{/if}
 						</div>
-						<div>
-							Catégories :
-							{#if ressource.tags != ''}
-								{#each ressource.tags.split(',') as tag}
-									<span>[{tag.trim()}] </span>
-								{/each}
-							{/if}
-						</div>
 					</div>
 				</div>
 				<div>
@@ -168,21 +160,6 @@
 					<input name="url" type="text" disabled={!$currentUser} />
 				</div>
 
-				<div>
-					<label for="tags">Catégories séparés par des virgules</label>
-					<input
-						type="text"
-						class="form-control"
-						id="tags"
-						name="tags"
-						aria-describedby="tagsHelp"
-						disabled={!$currentUser}
-					/>
-					<div id="tagsHelp">
-						Par exemple : Géométrie, Accessible, Exercices. Pour préciser si c'est une ressource
-						générale ou plus précise.
-					</div>
-				</div>
 				<div>
 					<label for="languages">Langues séparés par des virgules</label>
 					<input
