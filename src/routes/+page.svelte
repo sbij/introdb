@@ -97,6 +97,7 @@ Ajouter des filtres :
 				{/if}
 			{/each}
 		</fieldset>
+		<!-- <a href="#">Ajouter un champ "OU"</a><br> -->
 		<a on:click={resetDisciplines} class="">Tout déselectionner</a>
 	</section>
 
@@ -142,9 +143,11 @@ Ajouter des filtres :
 				{/if}
 			{/each}
 		</fieldset>
+		<!-- <a href="#">Ajouter un champ "OU"</a><br> -->
 		<a on:click={resetThemes} class="">Tout déselectionner</a>
 	</section>
 </div>
+<!-- TODO: Permalien de cette recherche : <a href="#">https://introdb.mocob.org/disc/daziojeizfjoizjfe/themes/daoizjoijezfijfez/</a> -->
 
 <br />
 <br />
@@ -156,11 +159,11 @@ Ajouter des filtres :
 		{#if ressource.expand['ressourcegroup'] !== undefined}
 			{#if ressource.expand['ressourcegroup'].id == group.id}
 				<div class="border border-slate-300 my-3 bg-white px-2 py-1 rounded">
-					
 					<b>{ressource.name}</b>
 					{#if ressource.url != ''}
 						<a href={ressource.url}>{ressource.url}</a>
 					{/if}
+					[<a href="/ressource/{ressource.id}">permalien</a>]
 					<br />
 					Type :
 					{#if ressource.expand['ressourcetype'] !== undefined}
@@ -190,6 +193,57 @@ Ajouter des filtres :
 						{/each}
 					{/if}
 
+					<div class="border rounded bg-slate-100 px-2 py-1 mt-2 mb-1">
+						Commentaires :
+
+						<ul class="list-disc list-inside">
+							{#if ressource.expand['votes(ressource)'] !== undefined}
+								{#each ressource.expand['votes(ressource)'] as vote}
+									<li>
+										<span>{vote.expand.value.value}</span> :
+										{vote.comment}
+										{#if vote.expand.user !== undefined}
+											(<a href="/user/{vote.expand.user.id}"
+												>{vote.expand.user.name
+													? vote.expand.user.name
+													: vote.expand.user.username}</a
+											>)
+										{/if}
+
+										{#if $currentUser}
+											{#if $currentUser.id == vote.user}
+												<form method="POST" action="/vote/{vote.id}/delete">
+													<button>Supprimer</button>
+												</form>
+											{/if}
+										{/if}
+									</li>
+								{/each}
+							{:else}
+								<li><i>Aucun commentaire</i></li>
+							{/if}
+						</ul>
+						<details>
+							<summary>Ajouter un commentaire</summary>
+
+							<form method="POST" action="?/addVote" use:enhance>
+								<label>
+									Voter :
+									<select name="value" disabled={!$currentUser}>
+										{#each data.votevalobj as votevalue}
+											<option value={votevalue.id}>{votevalue.value}</option>
+										{/each}
+									</select>
+								</label><br />
+								<label>
+									Commentaire :
+									<input name="comment" type="text" disabled={!$currentUser} />
+								</label><br />
+								<input name="ressource" type="hidden" value={ressource.id} />
+								<button class="btn-primary" disabled={!$currentUser}>Ajouter</button>
+							</form>
+						</details>
+					</div>
 				</div>
 			{/if}
 		{/if}

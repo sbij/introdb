@@ -48,10 +48,7 @@
 							{/if}
 							{#if $currentUser}
 								{#if $currentUser.id == ressource.user}
-									<form
-										method="POST"
-										action="/ressource/{ressource.id}/delete"
-									>
+									<form method="POST" action="/ressource/{ressource.id}/delete">
 										<button>Supprimer</button>
 									</form>
 								{/if}
@@ -89,10 +86,7 @@
 
 												{#if $currentUser}
 													{#if $currentUser.id == vote.user}
-														<form
-															method="POST"
-															action="/vote/{vote.id}/delete"
-														>
+														<form method="POST" action="/vote/{vote.id}/delete">
 															<button>Supprimer</button>
 														</form>
 													{/if}
@@ -106,25 +100,25 @@
 							</li>
 						</ul>
 						<details>
-								<summary>Ajouter un commentaire</summary>
+							<summary>Ajouter un commentaire</summary>
 
-								<form method="POST" action="?/addVote" use:enhance>
-									<label>
-										Voter :
-										<select name="value" disabled={!$currentUser}>
-											{#each data.vote_values as votevalue}
-												<option value={votevalue.id}>{votevalue.value}</option>
-											{/each}
-										</select>
-									</label><br />
-									<label>
-										Commentaire :
-										<input name="comment" type="text" disabled={!$currentUser} />
-									</label><br />
-									<input name="ressource" type="hidden" value={ressource.id} />
-									<button disabled={!$currentUser}>Ajouter</button>
-								</form>
-							</details>
+							<form method="POST" action="?/addVote" use:enhance>
+								<label>
+									Voter :
+									<select name="value" disabled={!$currentUser}>
+										{#each data.vote_values as votevalue}
+											<option value={votevalue.id}>{votevalue.value}</option>
+										{/each}
+									</select>
+								</label><br />
+								<label>
+									Commentaire :
+									<input name="comment" type="text" disabled={!$currentUser} />
+								</label><br />
+								<input name="ressource" type="hidden" value={ressource.id} />
+								<button disabled={!$currentUser}>Ajouter</button>
+							</form>
+						</details>
 					</div>
 				</div>
 			</div>

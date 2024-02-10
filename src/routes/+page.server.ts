@@ -46,8 +46,11 @@ export const load = (async () => {
   });
   const ressources = await pb.collection('ressources').getFullList({
     sort: 'name',
-    expand: 'disciplines, themes, ressourcegroup, ressourcetype'
+    expand: 'disciplines, themes, ressourcegroup, ressourcetype, votes(ressource).value,votes(ressource).user'
     //expand: 'ressources(disciplines)'
+  });
+  const vote_values = await pb.collection('vote_values').getFullList({
+      sort: '-weight',
   });
 
   return {
@@ -55,6 +58,7 @@ export const load = (async () => {
     themesobj: JSON.parse(JSON.stringify(themes)),
     groupsobj: JSON.parse(JSON.stringify(groups)),
     ressourcesobj: JSON.parse(JSON.stringify(ressources)),
+    votevalobj: JSON.parse(JSON.stringify(vote_values)),
   };
 }) satisfies PageServerLoad;
 
