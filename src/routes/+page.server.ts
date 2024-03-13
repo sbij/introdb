@@ -1,64 +1,83 @@
-import { pb } from '$lib/pocketbase'
+import { pb } from '$lib/pocketbase';
 import type { PageServerLoad, Actions } from './$types';
-import { onMount } from 'svelte'
-import { fail, redirect, error } from "@sveltejs/kit"
-
-
-
-export const actions = {
-  addDiscipline: async ({ request, locals, params }) => {
-
-      if (!locals.pb.authStore.isValid) {
-        throw redirect(303, '/login')
-      }
-
-      const formdata = await request.formData();
-
-      const data = {
-          "name": formdata.get('name'),
-          "url": formdata.get('name'),
-          "user": locals.user.id
-      };
-      console.log(data);
-
-      try {
-          const record = await pb.collection('disciplines').create(data);
-      } catch (err) {
-          console.error(err)
-          throw error(err.status, err.message)
-      }
-
-      return { success: true };
-  },
-} satisfies Actions;
+import { onMount } from 'svelte';
+import { fail, redirect, error } from '@sveltejs/kit';
 
 export const load = (async () => {
-  const disciplines = await pb.collection('disciplines').getFullList({
-    sort: 'name'
-    //expand: 'ressources(disciplines)'
-  });
-  const themes = await pb.collection('themes').getFullList({
-    sort: 'name'
-    //expand: 'ressources(disciplines)'
-  });
-  const groups = await pb.collection('ressource_groups').getFullList({
-    sort: 'order'
-  });
-  const ressources = await pb.collection('ressources').getFullList({
-    sort: 'name',
-    expand: 'disciplines, themes, ressourcegroup, ressourcetype, votes(ressource).value,votes(ressource).user'
-    //expand: 'ressources(disciplines)'
-  });
-  const vote_values = await pb.collection('vote_values').getFullList({
-      sort: '-weight',
-  });
+	const disciplines = await pb.collection('disciplines').getFullList({
+		sort: 'name'
+		//,expand: 'ressources(disciplines)'
+	});
+	const themes = await pb.collection('themes').getFullList({
+		sort: 'name',
+		expand: 'linkeddisciplines'
+	});
+	const branchsofscience = await pb.collection('branchsofscience').getFullList({
+		sort: 'order'
+	});
+	const ressources = await pb.collection('ressources').getFullList({
+		//expand: 'disciplines, themes, ressourcegroup, ressourcetype, votes(ressource).value,votes(ressource).user'
+		//expand: 'ressources(disciplines)'
+	});
 
-  return {
-    disciplinesobj: JSON.parse(JSON.stringify(disciplines)),
-    themesobj: JSON.parse(JSON.stringify(themes)),
-    groupsobj: JSON.parse(JSON.stringify(groups)),
-    ressourcesobj: JSON.parse(JSON.stringify(ressources)),
-    votevalobj: JSON.parse(JSON.stringify(vote_values)),
-  };
+	/*
+    filteredRessources = allRessources.filter(
+				(ress) =>
+					checkedDisciplines.every((r) => ress.disciplines.includes(r)) &&
+					checkedThemes.every((r) => ress.themes.includes(r))
+			);
+
+		filteredDisciplines = allDisciplines.filter((disc) =>
+			filteredRessources.some((r) => r.disciplines.includes(disc.id))
+		);
+
+
+
+      const numbers = [4, 9, 16, 25];
+      const newArr = numbers.map(Math.sqrt)
+
+      //Multiply all the values in an array with 10:
+      const numbers = [65, 44, 12, 4];
+      const newArr = numbers.map(myFunction)
+
+      function myFunction(num) {
+        return num * 10;
+      }
+
+    */
+
+	// for each discipline we count number of ressources
+	// first we count the number of ressources for each discipline
+	var discdict: { [index: string]: any } = {};
+	ressources.forEach((ressource) => {
+		ressource['disciplines'].forEach((discid: string) => {
+			if (discid in discdict) {
+				discdict[discid] += 1;
+			} else {
+				discdict[discid] = 1;
+			}
+		});
+	});
+
+	// then we add the count of ressources to the discipline. and set 0 if there are none
+	disciplines.forEach((elem) => {
+		if (elem["id"] in discdict) {
+			elem["ressourceCounter"] = discdict[elem["id"]];
+		} else {
+			elem["ressourceCounter"] = 0;
+		}
+	});
+
+
+	/* function addRessourceCounter(discip: object) {
+		return discip * 10;
+	}
+	const newArr = disciplines.map(addRessourceCounter); */
+
+	return {
+		disciplinesobj: JSON.parse(JSON.stringify(disciplines)),
+		themesobj: JSON.parse(JSON.stringify(themes)),
+		branchsofscienceobj: JSON.parse(JSON.stringify(branchsofscience)),
+		ressourcesobj: JSON.parse(JSON.stringify(ressources))
+	};
 }) satisfies PageServerLoad;
-

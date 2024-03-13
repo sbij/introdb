@@ -4,269 +4,101 @@
 	import { currentUser, pb } from '$lib/pocketbase';
 
 	export let data: PageData;
-	console.log(data);
-	let checkedDisciplines: string[] = [];
-	let checkedThemes: string[] = [];
+	//console.log(data);
 
 	let allRessources = data.ressourcesobj;
-	let allDisciplines = data.disciplinesobj;
 	let allThemes = data.themesobj;
+	let allBranchs = data.branchsofscienceobj;
 
-	let filteredRessources = allRessources;
-	let filteredDisciplines = allDisciplines;
-	let filteredThemes = allThemes;
+	//console.log(data.themesobj);
 
-	console.log(allDisciplines);
-
-	updateFilter();
+	const allparentdisciplines = Object.values(data.disciplinesobj).filter(
+		(item) => item.parentdisciplines.length == 0
+	);
+	const allchilddisciplines = Object.values(data.disciplinesobj).filter(
+		(item) => item.parentdisciplines.length != 0
+	);
 
 	//console.log(filteredRessources);
 	//console.log(Object.keys(data.ressourcesobj[0]));
-
-	// first we filter the disciplines with the checked disciplines
-	function updateFilter() {
-		// if checkboxes are checked, we filter, else we return all the ressources
-		if (checkedDisciplines.length > 0 || checkedThemes.length > 0) {
-			const words = ['spray', 'elite', 'exuberant', 'destruction', 'present'];
-			const result = words.filter((word) => word.length > 6);
-
-			filteredRessources = allRessources.filter(
-				(ress) =>
-					checkedDisciplines.every((r) => ress.disciplines.includes(r)) &&
-					checkedThemes.every((r) => ress.themes.includes(r))
-			);
-		} else {
-			//filteredRessources = [];
-			filteredRessources = allRessources;
-		}
-
-		filteredDisciplines = allDisciplines.filter((disc) =>
-			filteredRessources.some((r) => r.disciplines.includes(disc.id))
-		);
-		filteredThemes = allThemes.filter((disc) =>
-			filteredRessources.some((r) => r.themes.includes(disc.id))
-		);
-	}
-	function resetDisciplines() {
-		checkedDisciplines = [];
-		updateFilter();
-	}
-	function resetThemes() {
-		checkedThemes = [];
-		updateFilter();
-	}
 </script>
 
 <svelte:head>
-	<title>Introdb.mocob.org</title>
+	<title>introdb.mocob.org</title>
 </svelte:head>
-<p>Listes collaboratives de ressources d'introduction à différentes disciplines et thèmes.</p>
+<!-- <p>Listes collaboratives de ressources d'introduction à différentes disciplines et thèmes.</p> -->
 
-<!-- <h2>Liste des disciplines</h2> -->
-Ajouter des filtres :
 
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-	<section>
-		<fieldset>
-			<legend><h2 class="text-lg font-bold mt-4 mb-2">Disciplines :</h2></legend>
-
-			{#each filteredDisciplines as discipline}
-				<div>
-					<input
-						type="checkbox"
-						bind:group={checkedDisciplines}
-						value={discipline.id}
-						id={discipline.id}
-						name={discipline.id}
-						on:change={updateFilter}
-					/>
-					<label for={discipline.id}>{discipline.name}</label>
-				</div>
-				<!-- <a href="discipline/{discipline.id}">{discipline.name}</a> -->
-				<!-- ({discipline.expand['ressources(disciplines)'].length} ressource{discipline.expand[
-						'ressources(disciplines)'
-					].length == 1
-						? ''
-						: 's'}) -->
-				{#if $currentUser}
-					{#if $currentUser.id == discipline.user}
-						<form method="POST" action="/discipline/{discipline.id}/delete">
-							<button>Supprimer</button>
-						</form>
-					{/if}
-				{/if}
-			{/each}
-		</fieldset>
-		<!-- <a href="#">Ajouter un champ "OU"</a><br> -->
-		<a on:click={resetDisciplines} class="">Tout déselectionner</a>
-	</section>
-
-	<section>
-		<fieldset>
-			<legend><h2 class="text-lg font-bold mt-4 mb-2">Themes :</h2></legend>
-
-			<!-- <div>
-				<input
-					type="checkbox"
-					id="general"
-					bind:group={checkedThemes}
-					value="general"
-					name="general"
-					on:change={updateFilter}
-				/>
-				<label for="general">Général (aucun autre thème)</label>
-			</div> -->
-			{#each filteredThemes as theme}
-				<div>
-					<input
-						type="checkbox"
-						id={theme.id}
-						bind:group={checkedThemes}
-						value={theme.id}
-						name={theme.id}
-						on:change={updateFilter}
-					/>
-					<label for={theme.id}>{theme.name}</label>
-				</div>
-				<!-- <a href="theme/{theme.id}">{theme.name}</a> -->
-				<!-- ({discipline.expand['ressources(disciplines)'].length} ressource{discipline.expand[
-						'ressources(disciplines)'
-					].length == 1
-						? ''
-						: 's'}) -->
-				{#if $currentUser}
-					{#if $currentUser.id == theme.user}
-						<form method="POST" action="/discipline/{theme.id}/delete">
-							<button>Supprimer</button>
-						</form>
-					{/if}
-				{/if}
-			{/each}
-		</fieldset>
-		<!-- <a href="#">Ajouter un champ "OU"</a><br> -->
-		<a on:click={resetThemes} class="">Tout déselectionner</a>
-	</section>
-</div>
-<!-- TODO: Permalien de cette recherche : <a href="#">https://introdb.mocob.org/disc/daziojeizfjoizjfe/themes/daoizjoijezfijfez/</a> -->
-
-<br />
-<br />
-<h2 class="text-lg font-bold mt-4 mb-2">Ressources :</h2>
-
-{#each data.groupsobj as group}
-	<h3 class="text-base font-bold mt-2 mb-2">{group.name} :</h3>
-	{#each filteredRessources as ressource}
-		{#if ressource.expand['ressourcegroup'] !== undefined}
-			{#if ressource.expand['ressourcegroup'].id == group.id}
-				<div class="border border-slate-300 my-3 bg-white px-2 py-1 rounded">
-					<b>{ressource.name}</b>
-					{#if ressource.url != ''}
-						<a href={ressource.url}>{ressource.url}</a>
-					{/if}
-					[<a href="/ressource/{ressource.id}">permalien</a>]
-					<br />
-					Type :
-					{#if ressource.expand['ressourcetype'] !== undefined}
-						[{ressource.expand['ressourcetype'].name}]
-					{/if}
-					<br />
-
-					Disciplines :
-					{#if ressource.expand['disciplines'] !== undefined}
-						{#each ressource.expand['disciplines'] as disc}
-							<span>[{disc.name}] </span>
-						{/each}
-					{/if}
-					<br />
-
-					Themes :
-					{#if ressource.expand['themes'] !== undefined}
-						{#each ressource.expand['themes'] as theme}
-							<span>[{theme.name}] </span>
-						{/each}
-					{/if}
-					<br />
-					Langues :
-					{#if ressource.languages != ''}
-						{#each ressource.languages.split(',') as language}
-							<span>[{language.trim()}] </span>
-						{/each}
-					{/if}
-
-					<div class="border rounded bg-slate-100 px-2 py-1 mt-2 mb-1">
-						Commentaires :
-
-						<ul class="list-disc list-inside">
-							{#if ressource.expand['votes(ressource)'] !== undefined}
-								{#each ressource.expand['votes(ressource)'] as vote}
-									<li>
-										<span>{vote.expand.value.value}</span> :
-										{vote.comment}
-										{#if vote.expand.user !== undefined}
-											(<a href="/user/{vote.expand.user.id}"
-												>{vote.expand.user.name
-													? vote.expand.user.name
-													: vote.expand.user.username}</a
-											>)
-										{/if}
-
-										{#if $currentUser}
-											{#if $currentUser.id == vote.user}
-												<form method="POST" action="/vote/{vote.id}/delete">
-													<button>Supprimer</button>
-												</form>
-											{/if}
-										{/if}
-									</li>
-								{/each}
-							{:else}
-								<li><i>Aucun commentaire</i></li>
-							{/if}
-						</ul>
-						<details>
-							<summary>Ajouter un commentaire</summary>
-
-							<form method="POST" action="?/addVote" use:enhance>
-								<label>
-									Voter :
-									<select name="value" disabled={!$currentUser}>
-										{#each data.votevalobj as votevalue}
-											<option value={votevalue.id}>{votevalue.value}</option>
-										{/each}
-									</select>
-								</label><br />
-								<label>
-									Commentaire :
-									<input name="comment" type="text" disabled={!$currentUser} />
-								</label><br />
-								<input name="ressource" type="hidden" value={ressource.id} />
-								<button class="btn-primary" disabled={!$currentUser}>Ajouter</button>
-							</form>
-						</details>
-					</div>
-				</div>
-			{/if}
-		{/if}
-	{/each}
-{/each}
-
-<section>
+<div class="grid md:grid-cols-2 gap-4 mb-4">
 	<div>
-		<br />
-		<br />
-		<br />
-		<br />
-		Ajouter une discipline :
-
-		<form method="POST" action="?/addDiscipline" use:enhance>
-			<div>
-				<label for="name">Nom</label>
-				<input type="text" id="name" name="name" disabled={!$currentUser} />
-			</div>
-
-			<button type="submit" disabled={!$currentUser}>Ajouter</button>
-		</form>
+		<h2 class="text-xl font-bold mb-2">Thèmes</h2>
+		<ul class="list-disc list-inside">
+			{#each data.themesobj as theme}
+				<li>
+					<a href="#" class:text-gray-800={theme.expand['linkeddisciplines'] == undefined}>
+						{theme.name}
+					</a>{#if theme.expand['linkeddisciplines'] !== undefined}
+						<small>
+							({#each theme.expand['linkeddisciplines'] as linkeddiscipline, idx}<a
+									href="#"
+									class="text-blue-800"
+									>{linkeddiscipline.name}{#if idx < theme.expand['linkeddisciplines'].length - 1},
+									{/if}</a
+								>{/each})
+						</small>{/if}
+				</li>
+			{/each}
+		</ul>
 	</div>
-</section>
 
-Ajouter une ressource :
+	<div>
+		<h2 class="text-xl font-bold mb-2">Branches et disciplines</h2>
+
+		{#each data.branchsofscienceobj as branch}
+			<h3 class="text-base font-bold mt-2 mb-2">{branch.name}</h3>
+			{#each allparentdisciplines as parentdiscipline}
+				{#if parentdiscipline.branchs.includes(branch.id)}
+					<ul class="list-disc list-inside">
+						<li>
+							<a href="/discipline/{parentdiscipline.id}" class:text-gray-800={parentdiscipline.ressourceCounter == 0} class:visited:text-gray-800={parentdiscipline.ressourceCounter == 0}>
+								{parentdiscipline.name}
+							</a>
+							<small><span class="text-gray-700">({parentdiscipline.ressourceCounter}) {parentdiscipline.description}</span></small>
+							<ul class="list-disc list-inside ml-5">
+								{#each allchilddisciplines as childdiscipline}
+									{#if childdiscipline.parentdisciplines.includes(parentdiscipline.id)}
+										<li>
+											<a href="/discipline/{childdiscipline.id}" class:text-gray-800={childdiscipline.ressourceCounter == 0} class:visited:text-gray-800={childdiscipline.ressourceCounter == 0}>
+												{childdiscipline.name}
+											</a>
+											<small
+												><span class="text-gray-700">({childdiscipline.ressourceCounter}) {childdiscipline.description}</span>
+											</small>
+											<ul class="list-disc list-inside ml-5">
+												{#each allchilddisciplines as subchilddiscipline}
+													{#if subchilddiscipline.parentdisciplines.includes(childdiscipline.id)}
+														<li>
+															<a href="/discipline/{subchilddiscipline.id}" class:text-gray-800={subchilddiscipline.ressourceCounter == 0} class:visited:text-gray-800={subchilddiscipline.ressourceCounter == 0}>
+																{subchilddiscipline.name}
+															</a>
+															<small
+																><span class="text-gray-700"
+																	>({subchilddiscipline.ressourceCounter}) {subchilddiscipline.description}</span
+																></small
+															>
+															<!-- TODO: faire un meilleur recursive "infini". possiblement generer un json complet serverside, puis juste l'afficher sans calcul ici -->
+														</li>
+													{/if}
+												{/each}
+											</ul>
+										</li>
+									{/if}
+								{/each}
+							</ul>
+						</li>
+					</ul>
+				{/if}
+			{/each}
+		{/each}
+	</div>
+</div>

@@ -1,0 +1,1 @@
+export const discipandress = 'hello from $lib/message';

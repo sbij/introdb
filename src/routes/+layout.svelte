@@ -5,20 +5,23 @@
 	import { page } from '$app/stores';
 </script>
 
-<div class="container mx-auto max-w-3xl px-3 py-4">
+<div class="container mx-auto max-w-5xl px-3 py-4">
 	<div>
 		<header>
-			<a href="/" class="no-underline text-black visited:text-black"
-				><div>
-					<div>
-						<h1 class="text-2xl font-bold">
+			<div>
+				<div>
+					<a href="/" class="no-underline text-black visited:text-black"
+						><h1 class="text-2xl font-bold">
 							introdb<small>.mocob.org</small>
-						</h1>
-						<!-- <small>Since 2011</small> -->
-					</div>
-				</div></a
-			>
+						</h1></a
+					>
+					Bigger ideas on every subject.<br />If I want bigger ideas on
+					football/programming/politics/nutrition/philosophy/etc, where to look, what to read?
+					<!-- <small>Since 2011</small> -->
+				</div>
+			</div>
 		</header>
+		<!-- 
 		<nav>
 			<ul class="list-disc list-inside mb-5 mt-3">
 				{#if $currentUser}
@@ -49,11 +52,11 @@
 					<li><a href="/login">Login</a></li>
 				{/if}
 			</ul>
-		</nav>
-		<div>
+		</nav> -->
+		<div class="mt-5">
 			<slot />
 		</div>
-		<footer>
+		<footer class="mt-8">
 			<small
 				><i>Site développé au sein du projet <a href="https://mocob.org/">MoCOB.org</a></i></small
 			>
