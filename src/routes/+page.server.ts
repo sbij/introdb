@@ -61,13 +61,29 @@ export const load = (async () => {
 
 	// then we add the count of ressources to the discipline. and set 0 if there are none
 	disciplines.forEach((elem) => {
-		if (elem["id"] in discdict) {
-			elem["ressourceCounter"] = discdict[elem["id"]];
+		if (elem['id'] in discdict) {
+			elem['ressourceCounter'] = discdict[elem['id']];
 		} else {
-			elem["ressourceCounter"] = 0;
+			elem['ressourceCounter'] = 0;
 		}
 	});
 
+	console.log(themes);
+
+	// for each theme, we attach the number of ressources of each linked discipline, and save the sum
+	themes.forEach((elem) => {
+		elem['subressourceCounter'] = 0;
+		if (elem.expand['linkeddisciplines'] != undefined) {
+			elem.expand['linkeddisciplines'].forEach((elem2: any) => {
+				if (elem2['id'] in discdict) {
+					elem2['ressourceCounter'] = discdict[elem2['id']];
+					elem['subressourceCounter'] += discdict[elem2['id']];
+				} else {
+					elem2['ressourceCounter'] = 0;
+				}
+			});
+		}
+	});
 
 	/* function addRessourceCounter(discip: object) {
 		return discip * 10;

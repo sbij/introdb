@@ -35,16 +35,17 @@
 		<ul class="list-disc list-inside">
 			{#each data.themesobj as theme}
 				<li>
-					<a href="#" class:text-gray-800={theme.expand['linkeddisciplines'] == undefined}>
+					<a href="#" class:text-gray-800={theme.expand['linkeddisciplines'] == undefined || !theme.subressourceCounter}>
 						{theme.name}
-					</a>{#if theme.expand['linkeddisciplines'] !== undefined}
-						<small>
-							({#each theme.expand['linkeddisciplines'] as linkeddiscipline, idx}<a
+					</a><small class="text-gray-700">({theme.subressourceCounter})</small> {#if theme.expand['linkeddisciplines'] !== undefined}
+						<small class="text-gray-700">
+							(disciplines : {#each theme.expand['linkeddisciplines'] as linkeddiscipline, idx}<a
 									href="#"
 									class="text-blue-800"
-									>{linkeddiscipline.name}{#if idx < theme.expand['linkeddisciplines'].length - 1},
-									{/if}</a
-								>{/each})
+									class:text-gray-800={!linkeddiscipline.ressourceCounter}
+									>{linkeddiscipline.name}</a
+									>{#if idx < theme.expand['linkeddisciplines'].length - 1},
+									{/if}{/each})
 						</small>{/if}
 				</li>
 			{/each}

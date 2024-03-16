@@ -17,6 +17,8 @@
 					>
 					Bigger ideas on every subject.<br />If I want bigger ideas on
 					football/programming/politics/nutrition/philosophy/etc, where to look, what to read?
+					<br />
+					We map themes to academic disciplines
 					<!-- <small>Since 2011</small> -->
 				</div>
 			</div>
