@@ -2,7 +2,7 @@ import { pgTable, serial, text, varchar } from "drizzle-orm/pg-core";
 import { drizzle } from "drizzle-orm/node-postgres";
 import pkg from 'pg';
 const {Client} = pkg;
-import { CONNECTION_URL } from '$env/static/private';
+import { CONNECTION_URL } from '$env/dynamic/private';
 import * as schema from '$lib/server/schema';
 
 
