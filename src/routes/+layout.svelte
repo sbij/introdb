@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
-	import { currentUser, pb } from '$lib/pocketbase';
 	import '../app.css';
 	import { page } from '$app/stores';
 </script>
@@ -16,9 +15,9 @@
 						</h1></a
 					>
 					Bigger ideas on every subject.<br />If I want bigger ideas on
-					football/programming/politics/nutrition/philosophy/etc, where to look, what to read?
+					football/programming/politics/nutrition/philosophy/etc, where to look, what to read? we here try to suggest short/medium-length quality <i>articles</i> to learn and understand the "essence" of those different disciplines. Polymaths
 					<br />
-					We map themes to academic disciplines
+					More generally, we map different themes to academic disciplines
 					<!-- <small>Since 2011</small> -->
 				</div>
 			</div>

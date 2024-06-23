@@ -2,12 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+	font-size: 16px;
+  }
+
 @layer components {
 	.btn-primary {
 		@apply py-1 px-2 bg-blue-500 text-white font-semibold rounded shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 cursor-pointer;
 	}
 	a {
-		@apply text-blue-600 hover:text-blue-800 visited:text-purple-600;
+		@apply text-blue-600 hover:text-blue-800 visited:text-blue-600;/*  visited:text-purple-600;*/
 	}
 	.card {
 		@apply bg-white px-3 py-3 rounded shadow;

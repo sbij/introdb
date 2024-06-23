@@ -1,26 +1,9 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import type { PageData, ActionData } from './$types';
-	import { currentUser, pb } from '$lib/pocketbase';
 
 	export let data: PageData;
-	//console.log(data);
-
-	let allRessources = data.ressourcesobj;
-	let allThemes = data.themesobj;
-	let allBranchs = data.branchsofscienceobj;
-
-	//console.log(data.themesobj);
-
-	const allparentdisciplines = Object.values(data.disciplinesobj).filter(
-		(item) => item.parentdisciplines.length == 0
-	);
-	const allchilddisciplines = Object.values(data.disciplinesobj).filter(
-		(item) => item.parentdisciplines.length != 0
-	);
-
-	//console.log(filteredRessources);
-	//console.log(Object.keys(data.ressourcesobj[0]));
+	console.log(data);
 </script>
 
 <svelte:head>
@@ -28,25 +11,22 @@
 </svelte:head>
 <!-- <p>Listes collaboratives de ressources d'introduction à différentes disciplines et thèmes.</p> -->
 
-
 <div class="grid md:grid-cols-2 gap-4 mb-4">
 	<div>
 		<h2 class="text-xl font-bold mb-2">Thèmes</h2>
 		<ul class="list-disc list-inside">
 			{#each data.themesobj as theme}
 				<li>
-					<a href="#" class:text-gray-800={theme.expand['linkeddisciplines'] == undefined || !theme.subressourceCounter}>
+					<a href="#">
 						{theme.name}
-					</a><small class="text-gray-700">({theme.subressourceCounter})</small> {#if theme.expand['linkeddisciplines'] !== undefined}
-						<small class="text-gray-700">
-							(disciplines : {#each theme.expand['linkeddisciplines'] as linkeddiscipline, idx}<a
-									href="#"
-									class="text-blue-800"
-									class:text-gray-800={!linkeddiscipline.ressourceCounter}
-									>{linkeddiscipline.name}</a
-									>{#if idx < theme.expand['linkeddisciplines'].length - 1},
-									{/if}{/each})
-						</small>{/if}
+					</a>
+					<small class="text-gray-700">
+						(disciplines : {#each theme.themesToDisciplines as linkeddiscipline, idx}<a
+								href="/discipline/{linkeddiscipline.discipline.id}"
+								>{linkeddiscipline.discipline.name}</a
+							>{#if idx < theme.themesToDisciplines.length - 1},
+							{/if}{/each})
+					</small>
 				</li>
 			{/each}
 		</ul>
@@ -55,39 +35,49 @@
 	<div>
 		<h2 class="text-xl font-bold mb-2">Branches et disciplines</h2>
 
-		{#each data.branchsofscienceobj as branch}
+		{#each data.branchsobj as branch}
 			<h3 class="text-base font-bold mt-2 mb-2">{branch.name}</h3>
-			{#each allparentdisciplines as parentdiscipline}
-				{#if parentdiscipline.branchs.includes(branch.id)}
+			{#each data.disciplinesobj as parentdiscipline}
+				{#if parentdiscipline.disciplines_to_branchs && parentdiscipline.disciplines_to_branchs.branchId == branch.id && !parentdiscipline.disciplines_to_parent_discip}
 					<ul class="list-disc list-inside">
 						<li>
-							<a href="/discipline/{parentdiscipline.id}" class:text-gray-800={parentdiscipline.ressourceCounter == 0} class:visited:text-gray-800={parentdiscipline.ressourceCounter == 0}>
-								{parentdiscipline.name}
+							<a href="/discipline/{parentdiscipline.disciplines.id}">
+								{parentdiscipline.disciplines.name}
 							</a>
-							<small><span class="text-gray-700">({parentdiscipline.ressourceCounter}) {parentdiscipline.description}</span></small>
+							{#if parentdiscipline.disciplines.description}
+								<small
+									><span class="text-gray-700">{parentdiscipline.disciplines.description}</span
+									></small
+								>
+							{/if}
 							<ul class="list-disc list-inside ml-5">
-								{#each allchilddisciplines as childdiscipline}
-									{#if childdiscipline.parentdisciplines.includes(parentdiscipline.id)}
+								{#each data.disciplinesobj as childdiscipline}
+									{#if childdiscipline.disciplines_to_parent_discip && childdiscipline.disciplines_to_parent_discip.parentId == parentdiscipline.disciplines.id}
 										<li>
-											<a href="/discipline/{childdiscipline.id}" class:text-gray-800={childdiscipline.ressourceCounter == 0} class:visited:text-gray-800={childdiscipline.ressourceCounter == 0}>
-												{childdiscipline.name}
-											</a>
-											<small
-												><span class="text-gray-700">({childdiscipline.ressourceCounter}) {childdiscipline.description}</span>
-											</small>
+											<a href="/discipline/{childdiscipline.disciplines.id}"
+												>{childdiscipline.disciplines.name}</a
+											>
+											{#if childdiscipline.disciplines.description}
+												<small
+													><span class="text-gray-700"
+														>{childdiscipline.disciplines.description}</span
+													></small
+												>
+											{/if}
 											<ul class="list-disc list-inside ml-5">
-												{#each allchilddisciplines as subchilddiscipline}
-													{#if subchilddiscipline.parentdisciplines.includes(childdiscipline.id)}
+												{#each data.disciplinesobj as schilddiscipline}
+													{#if schilddiscipline.disciplines_to_parent_discip && schilddiscipline.disciplines_to_parent_discip.parentId == childdiscipline.disciplines.id}
 														<li>
-															<a href="/discipline/{subchilddiscipline.id}" class:text-gray-800={subchilddiscipline.ressourceCounter == 0} class:visited:text-gray-800={subchilddiscipline.ressourceCounter == 0}>
-																{subchilddiscipline.name}
-															</a>
-															<small
-																><span class="text-gray-700"
-																	>({subchilddiscipline.ressourceCounter}) {subchilddiscipline.description}</span
-																></small
+															<a href="/discipline/{schilddiscipline.disciplines.id}"
+																>{schilddiscipline.disciplines.name}</a
 															>
-															<!-- TODO: faire un meilleur recursive "infini". possiblement generer un json complet serverside, puis juste l'afficher sans calcul ici -->
+															{#if schilddiscipline.disciplines.description}
+																<small
+																	><span class="text-gray-700"
+																		>{schilddiscipline.disciplines.description}</span
+																	></small
+																>
+															{/if}
 														</li>
 													{/if}
 												{/each}
@@ -100,6 +90,25 @@
 					</ul>
 				{/if}
 			{/each}
+		{/each}
+
+		<h3 class="text-base font-bold mt-2 mb-2">Disciplines without branch</h3>
+		{#each data.disciplinesobj as parentdiscipline}
+			{#if !parentdiscipline.disciplines_to_branchs && !parentdiscipline.disciplines_to_parent_discip}
+				<ul class="list-disc list-inside">
+					<li>
+						<a href="/discipline/{parentdiscipline.disciplines.id}">
+							{parentdiscipline.disciplines.name}
+						</a>
+						{#if parentdiscipline.disciplines.description}
+							<small
+								><span class="text-gray-700">{parentdiscipline.disciplines.description}</span
+								></small
+							>
+						{/if}
+					</li>
+				</ul>
+			{/if}
 		{/each}
 	</div>
 </div>
